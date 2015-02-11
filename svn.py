@@ -4,8 +4,9 @@
 
 import pysvn
 import conf
+import datetime
 
-
+#get settings from config.ini
 def set_svn_settings():
     m, svn = conf.load_config()
     client = pysvn.Client()
@@ -15,8 +16,10 @@ def set_svn_settings():
     return client, url
 
 
+#return log for revision or range of revisions
 def svn_show_log(start_id, end_id):
     client, url = set_svn_settings()
+    result=""
     for count in range(0,(end_id-start_id)+1):
         revision_number=str(client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
                              revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
@@ -24,10 +27,17 @@ def svn_show_log(start_id, end_id):
         revision_message=client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
                              revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
                              discover_changed_paths=True,limit=0)[count].get("message")
+        revision_date=client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
+                             revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
+                             discover_changed_paths=True,limit=0)[count].get("date")
+        revision_date=datetime.datetime.fromtimestamp(int(revision_date)).strftime('%Y-%m-%d %H:%M:%S')
+        revision_author=client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
+                             revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
+                             discover_changed_paths=True,limit=0)[count].get("author")
         qty_file=len(client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
                              revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
                              discover_changed_paths=True,limit=0)[count].get("changed_paths"))
-        print "#"*80+"\n  Rev:\t\t\t"+revision_number+"\n  Comments:\t\t"+revision_message+"\n  Total files:\t"+str(qty_file)
+        result+="#"*80+"\n  Rev:\t\t\t"+revision_number+"\n  Author:\t\t"+revision_author+"\n  Comments:\t\t"+revision_message+"\n  Commit date:\t"+revision_date+"\n  Total object:\t"+str(qty_file)+"\n"
         for file in range(0,qty_file):
             f_name=client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
                              revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
@@ -35,14 +45,12 @@ def svn_show_log(start_id, end_id):
             f_status=client.log(url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,start_id ),
                              revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,end_id),
                              discover_changed_paths=True,limit=0)[count].get("changed_paths")[file]['action']
-            print "\t"+f_status+" "+f_name
+            result+="\t"+f_status+" "+f_name+"\n"
+    return result
 
 
 
 
 
-svn_show_log(5012, 5014)
-"""
-client,url=set_svn_settings()
-print client.log( url,revision_start=pysvn.Revision( pysvn.opt_revision_kind.number,2180 ),revision_end=pysvn.Revision( pysvn.opt_revision_kind.number,2180),discover_changed_paths=True,limit=0)[0].get("changed_paths")[0]['path']
-"""
+a=svn_show_log(5323,5323)
+print a

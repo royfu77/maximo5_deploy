@@ -39,8 +39,8 @@
       <file leaf-file-name="svn.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/svn.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41379312" vertical-offset="205" max-vertical-offset="901">
-              <caret line="29" column="71" selection-start-line="29" selection-start-column="71" selection-end-line="29" selection-end-column="71" />
+            <state vertical-scroll-proportion="0.6336207" vertical-offset="358" max-vertical-offset="1054">
+              <caret line="47" column="49" selection-start-line="47" selection-start-column="49" selection-end-line="47" selection-end-column="49" />
               <folding>
                 <element signature="e#70#82#0" expanded="true" />
               </folding>
@@ -353,7 +353,7 @@
           <line>6</line>
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -411,8 +411,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/svn.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41379312" vertical-offset="205" max-vertical-offset="901">
-          <caret line="29" column="71" selection-start-line="29" selection-start-column="71" selection-end-line="29" selection-end-column="71" />
+        <state vertical-scroll-proportion="0.6336207" vertical-offset="358" max-vertical-offset="1054">
+          <caret line="47" column="49" selection-start-line="47" selection-start-column="49" selection-end-line="47" selection-end-column="49" />
           <folding>
             <element signature="e#70#82#0" expanded="true" />
           </folding>
