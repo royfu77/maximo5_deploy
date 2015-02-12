@@ -52,5 +52,5 @@ def svn_show_log(start_id, end_id):
 
 
 
-a=svn_show_log(5323,5323)
-print a
+#a=svn_show_log(5323,5323)
+#print a
