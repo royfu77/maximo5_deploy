@@ -8,7 +8,7 @@ import datetime
 
 #get settings from config.ini
 def set_svn_settings():
-    m, svn = conf.load_config()
+    m,svn, s = conf.load_config()
     client = pysvn.Client()
     client.set_default_username(svn['svn_username'])
     client.set_default_password(svn['svn_password'])
