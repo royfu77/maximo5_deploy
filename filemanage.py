@@ -101,7 +101,8 @@ def prepare_file_for_deployment(ticket_id, svn_id):
         os.mkdir(path+delimiter()+"backup")
         with open(path+delimiter()+'notes.txt', 'w') as f:
             f.write("Date:\t\t"+str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))+"\n")
-            f.write("Ticket:\t\t"+str(svn_id)+"\n")
+            f.write("Ticket:\t\t"+str(ticket_id)+"\n")
+            f.write("Revision:\t"+str(svn_id)+"\n")
             f.write("Deployer:\t"+str(username())+"\n")
             f.write("-"*50+" File for deploy"+"-"*50+"\n")
             f.write('%-70s\t%9s\t%32s\n%s\n' % ('Filename', 'Size(byte)', 'md5hash', '-'*116))
@@ -112,7 +113,7 @@ def prepare_file_for_deployment(ticket_id, svn_id):
             backup_file = get_production_backup(path+delimiter()+"backup", list_filename)
             f.write("-"*50+" Backup  files "+"-"*50+"\n")
             for filename in sorted(backup_file.keys()):
-                f.write('%-70s\t%9s\t%32s\n' % (filename, svn_file_info[filename][0], svn_file_info[filename][1]))
+                f.write('%-70s\t%9s\t%32s\n' % (filename, backup_file[filename][0], backup_file[filename][1]))
 
     return 0
 
@@ -123,4 +124,4 @@ get_production_backup('d:\\tmp\\bpms\\', ['/trunk/MAXIMOTEST/custom/app/rtt/mbo/
                                           '/trunk/MAXIMOTEST/SOURCES/custom/app/rtt/mbo/RTTDocsMbo.java',
                                           '/trunk/DB_OBJ/VIEW.test.sql'])
 """
-prepare_file_for_deployment(1632111, 5385)
+prepare_file_for_deployment(123456, 5234)
