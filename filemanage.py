@@ -9,7 +9,6 @@ from datetime import datetime
 from hashlib import md5
 import svn
 from smb.SMBConnection import SMBConnection
-from smb.smb_structs import OperationFailure
 
 
 def delimiter():
@@ -29,7 +28,7 @@ def username():
 # return tuple of dict with setting
 def set_samba_settings():
     main, s, samba = conf.load_config()
-    return main,samba
+    return main, samba
 
 # this function copy-paste from source code pysmb/base/util/__init__
 def convert_file_time_to_epoch(t):
@@ -55,7 +54,7 @@ def check_ticket(ticket_id):
     main, s = set_samba_settings()
     # if directory with ticket number not exist return true
     if not os.path.exists(main["local_storage"]+delimiter()+str(ticket_id)):
-        print "Ticket "+str(ticket_id)+" was not processed earlier"
+        # print "Ticket "+str(ticket_id)+" was not processed earlier"
         return True, main["local_storage"]+delimiter()+str(ticket_id)
     else:
         #
@@ -64,14 +63,14 @@ def check_ticket(ticket_id):
             return False, None
         else:
             if len(os.listdir(main["local_storage"]+delimiter()+str(ticket_id)+delimiter())) < 3 or os.path.isfile(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()+"notes.txt") is False:
-                print "[WARN]\tPath "+str(main["local_storage"]) + \
+                print "[WARN]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tPath "+str(main["local_storage"]) + \
                       delimiter()+str(ticket_id) + \
                       " already exist, but directory is empty or deploy is not complited." \
                       "\n\t\tFlushing directory and reused it."
                 rmtree(main["local_storage"]+delimiter()+str(ticket_id))
                 return True, main["local_storage"]+delimiter()+str(ticket_id)
             with open(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()+"notes.txt","r") as note:
-                print "Ticket#"+str(ticket_id)+" was processed earlier."
+                print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tTicket#"+str(ticket_id)+" was processed earlier."
                 print note.read()
                 return False, None
 
@@ -100,7 +99,7 @@ def get_production_backup(path, list_filename):
     return file_info
 
 
-# new function, worked via pysmb
+# new function for backup, worked via pysmb
 def get_production_backup2(path, list_filename):
     main, samba = set_samba_settings()
     conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], 'maximopreprod', use_ntlm_v2 = True)
@@ -119,7 +118,6 @@ def get_production_backup2(path, list_filename):
                 ch_path = ch_path+delimiter()+item
                 continue
             if item in [x.filename for x in testdir]:
-                # print 'dir exist:  '+ch_path
                 pass
             else:
                 dir_exist = False
@@ -127,7 +125,7 @@ def get_production_backup2(path, list_filename):
             ch_path = ch_path+delimiter()+item
         if dir_exist is False:
             continue
-        print f
+        # print f
         testfiles = conn.listPath('c$', 'maximo/'+f[18:-len(os.path.basename(f))])  # observe target directory
         if os.path.basename(f) in [x.filename for x in testfiles]:                  # check file exist on remote directory
             if not os.path.exists(path+delimiter()+f[:-len(os.path.basename(f))].replace('/', '\\')):
@@ -136,8 +134,8 @@ def get_production_backup2(path, list_filename):
                 file_attributes, filesize = conn.retrieveFile('c$',
                                                                   delimiter()+'maximo'+delimiter()+f[18:].replace('/', '\\'),
                                                                   local_file)
-            file_time = conn.getAttributes('c$', 'maximo/'+f[18:])
-            os.utime(path+delimiter()+f.replace('/', '\\'), (os.stat(path+delimiter()+f.replace('/', '\\')).st_ctime, convert_file_time_to_epoch(file_time.last_write_time)))
+            # file_time = conn.getAttributes('c$', 'maximo/'+f[18:])
+            # os.utime(path+delimiter()+f.replace('/', '\\'), (os.stat(path+delimiter()+f.replace('/', '\\')).st_ctime, convert_file_time_to_epoch(file_time.last_write_time)))
             file_info[f] = []
             file_info[f].append(filesize)
             file_info[f].append(md5(open(path+delimiter()+f.replace('/', '\\'), 'rb').read()).hexdigest())
@@ -158,26 +156,117 @@ def prepare_file_for_deployment(ticket_id, svn_id):
             f.write("Revision:\t"+str(svn_id)+"\n")
             f.write("Deployer:\t"+str(username())+"\n")
             f.write("-"*52+" File for deploy"+"-"*52+"\n")
-            f.write('%-70s\t%9s\t%32s\n%s\n' % ('Filename', 'Size(byte)', 'md5hash', '-'*120))
+            f.write('%-75s\t%9s\t%32s\n%s\n' % ('Filename', 'Size(byte)', 'md5hash', '-'*120))
+            print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tExport new files from svn"
             svn_file_info = svn.svn_export_files(svn_id, path+delimiter()+"for_deployment")
             list_filename = sorted(svn_file_info.keys())
             for filename in list_filename:
-                f.write('%-70s\t%9s\t%32s\n' % (filename, svn_file_info[filename][0], svn_file_info[filename][1]))
+                f.write('%-75s\t%9s\t%32s\n' % (filename, svn_file_info[filename][0], svn_file_info[filename][1]))
             # backup_file = get_production_backup(path+delimiter()+"backup", list_filename)
+            print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tBackup files from production"
             backup_file = get_production_backup2(path+delimiter()+"backup", list_filename)
             f.write("-"*53+" Backup  files"+"-"*53+"\n")
             for filename in sorted(backup_file.keys()):
-                f.write('%-70s\t%9s\t%32s\n' % (filename, backup_file[filename][0], backup_file[filename][1]))
+                f.write('%-75s\t%9s\t%32s\n' % (filename, backup_file[filename][0], backup_file[filename][1]))
 
     return 0
 
-"""
-get_production_backup2('d:\\tmp\\bpms\\18', ['/trunk/MAXIMOTEST/psdi/jsp/app/actions/ActionsMR.class',
-                                   '/trunk/MAXIMOTEST/custom/universal_tables/ExtTableMbo.class',
-                                   '/trunk/MAXIMOTEST/custom/app/mr/mbo/MR2Mbo.class',
-                                   '/trunk/MAXIMOTEST/DB_OBJ/PROCEDURE.SYNCHRONIZATION_IDM.sql',
-                                   '/trunk/MAXIMOTEST/SOURCES/psdi/jsp/app/wotrack/ActionsWO.java',
-                                   '/trunk/MAXIMOTEST/jsp/app/matreq/main.jsp',
-                                   '/trunk/MAXIMOTEST/resources/defaults/jspsettings.txt'])
-"""
-prepare_file_for_deployment(1604065, 5386)
+
+# store new file on production server
+def upload_file(ticket_id):
+    main, samba = set_samba_settings()
+    path = main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'for_deployment'\
+           + delimiter()+'trunk'+delimiter() + 'maximotest'
+    tree = []
+    for item in os.walk(path):
+        item = (item[0].replace(path, ''), item[1], item[2])
+        if item[0].replace(path, '')[1:8] == 'SOURCES':
+            continue
+        tree.append(item)
+    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], 'maximopreprod', use_ntlm_v2 = True)
+    conn.connect(samba['smb_server'], 139)
+    # for test using c:\temp\maximo
+    # loop in loop create file structure on remote server, copy file and writing action_log
+    action_log = []
+    notes = open(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'notes.txt', 'a+')
+    notes.write("-"*53+"Uploaded files"+"-"*53+"\n")
+    notes.write('%-75s\t%9s\t%s\n%s\n' % ('Remote filename', 'Size(byte)', 'Timestamp', '-'*120))
+    for i in tree:
+        for k in i[1]:
+            if k == 'SOURCES' or k == 'DB_OBJ': continue
+            if k not in [x.filename for x in conn.listPath('c$', 'temp'+delimiter()+'maximo'+i[0])]:
+                # for testing using path temp/maximo for prod need remote temp
+                ch_path = 'temp'+delimiter()+'maximo'+i[0]+delimiter()+str(k)
+                conn.createDirectory('c$', ch_path)
+                print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tCreate directory "+\
+                      delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+ch_path
+                action_log.append(('mkdir', delimiter()+delimiter()+samba['smb_server']+delimiter()+'c$'+delimiter()+ch_path))
+        if len(i[2]) > 0 and 'DB_OBJ' != i[0][1:]:
+            for f in i[2]:
+                f_path = 'temp'+delimiter()+'maximo'+i[0]+delimiter()
+                obj_file = str(path)+str(i[0])+delimiter()+str(f)
+                file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
+                notes.write('%-75s\t%9s\t%s\n' % (delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+f_path+f, str(file_size), datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
+                print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tUploaded size in byte:"+str(file_size)+\
+                      ", file: "+delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+f_path+f
+                action_log.append(('cp', delimiter()+delimiter()+samba['smb_server']+delimiter()+'c$'+delimiter()+f_path+f))
+    # write rollback file
+    with open((main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'action.log'), 'w') as rollback:
+        for line in action_log:
+            rollback.write(line[0]+','+line[1]+'\n')
+    conn.close()
+    notes.close()
+    return 0
+
+
+# remove new files and restore from backup
+def rollback(ticket_id):
+    main, samba = set_samba_settings()
+    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], 'maximopreprod', use_ntlm_v2 = True)
+    conn.connect(samba['smb_server'], 139)
+    action_log = []
+    with open((main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'action.log'), 'r') as log:
+        for line in log.readlines():
+            action_log.append(line.strip())
+    action_log.reverse()
+    notes = open(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'notes.txt', 'a+')
+    notes.write("-"*50+"Rollback all change"+"-"*50+"\n")
+    notes.write('%-75s\t%9s\t%s\n%s\n' % ('Remote filename', 'Action', 'Timestamp', '-'*120))
+    for line in action_log:
+        line = line.split(',')
+        # generate path for smb
+        path = '\\'.join(line[1][2:].split('\\')[2:])
+        if line[0] == 'cp':
+            conn.deleteFiles('c$', path)
+            print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tFile deleted: "+line[1]
+        if line[0] == 'mkdir':
+            conn.deleteDirectory('c$', path)
+            print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tDirectory deleted: "+line[1]
+        notes.write('%-75s\t%9s\t%s\n' % (line[1], 'Deleted', datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
+    os.remove(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'action.log')
+    path = main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'backup'\
+           + delimiter()+'trunk'+delimiter() + 'maximotest'
+    tree = []
+    for item in os.walk(path):
+        item = (item[0].replace(path, ''), item[1], item[2])
+        if item[0].replace(path, '')[1:8] == 'SOURCES':
+            continue
+        tree.append(item)
+    for item in tree:
+        if len(item[2]) > 0:
+            for f in item[2]:
+                f_path = 'temp'+delimiter()+'maximo'+item[0]+delimiter()
+                obj_file = str(path)+str(item[0])+delimiter()+str(f)
+                file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
+                file_path = delimiter()+delimiter()+str(samba['smb_server'])+delimiter()+"c$"+delimiter()+f_path+f
+                print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tFile restored from backup: "+str(file_path)
+
+                notes.write('%-75s\t%9s\t%s\n' % (file_path, 'Restored', datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
+
+    conn.close()
+    return 0
+
+
+# upload_file(1615344)
+# prepare_file_for_deployment(1615344, 5393)
+# rollback(1615344)
