@@ -267,6 +267,6 @@ def rollback(ticket_id):
     return 0
 
 
-# upload_file(1615344)
 # prepare_file_for_deployment(1615344, 5393)
-# rollback(1615344)
+# upload_file(1604065)
+# rollback(1604065)
