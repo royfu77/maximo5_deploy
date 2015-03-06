@@ -40,7 +40,8 @@ def svn_show_log(start_id, end_id):
         qty_file = len(client.log(url, revision_start=pysvn.Revision( pysvn.opt_revision_kind.number, start_id),
                              revision_end=pysvn.Revision(pysvn.opt_revision_kind.number, end_id),
                              discover_changed_paths=True, limit=0)[count].get("changed_paths"))
-        result += "-"*120+"\n  Rev:\t\t\t"+revision_number+"\n  Author:\t\t"+revision_author+"\n  Comments:\t\t"+revision_message+"\n  Commit date:\t"+revision_date+"\n  Total object:\t"+str(qty_file)+"\n"
+        result += ("%s\nRev:\t\t %-20s\nAuthor:\t\t %-20s\nComments:\t %-20s\nCommit Date:\t %-20s\nTotal object:\t %-20s\n" %
+                   ("-"*120, revision_number, revision_author, revision_message, revision_date, str(qty_file)))
         for file in range(0, qty_file):
             f_name = client.log(url, revision_start=pysvn.Revision( pysvn.opt_revision_kind.number, start_id),
                              revision_end=pysvn.Revision(pysvn.opt_revision_kind.number,end_id),

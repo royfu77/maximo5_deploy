@@ -34,9 +34,10 @@ def set_samba_settings():
 def convert_file_time_to_epoch(t):
     return (t - 116444736000000000L) / 10000000.0
 
+
 # check local directory and create if not exist
 def check_local_storage():
-    main,s = set_samba_settings()
+    main, s = set_samba_settings()
     if not os.path.exists(main["local_storage"]):
         os.makedirs(main["local_storage"])
     else:
@@ -151,12 +152,12 @@ def prepare_file_for_deployment(ticket_id, svn_id):
         os.mkdir(path+delimiter()+"for_deployment")
         os.mkdir(path+delimiter()+"backup")
         with open(path+delimiter()+'notes.txt', 'w') as f:
-            f.write("-"*120+"\nDate:\t\t"+str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))+"\n")
+            f.write("-"*128+"\nDate:\t\t"+str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))+"\n")
             f.write("Ticket:\t\t"+str(ticket_id)+"\n")
             f.write("Revision:\t"+str(svn_id)+"\n")
             f.write("Deployer:\t"+str(username())+"\n")
-            f.write("-"*52+" File for deploy"+"-"*52+"\n")
-            f.write('%-75s\t%9s\t%32s\n%s\n' % ('Filename', 'Size(byte)', 'md5hash', '-'*120))
+            f.write("-"*56+" File for deploy"+"-"*56+"\n")
+            f.write('%-75s\t%9s\t%32s\n%s\n' % ('Filename', 'Size(byte)', 'md5hash', '-'*128))
             print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tExport new files from svn"
             svn_file_info = svn.svn_export_files(svn_id, path+delimiter()+"for_deployment")
             list_filename = sorted(svn_file_info.keys())
@@ -165,7 +166,7 @@ def prepare_file_for_deployment(ticket_id, svn_id):
             # backup_file = get_production_backup(path+delimiter()+"backup", list_filename)
             print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tBackup files from production"
             backup_file = get_production_backup2(path+delimiter()+"backup", list_filename)
-            f.write("-"*53+" Backup  files"+"-"*53+"\n")
+            f.write("-"*57+" Backup  files"+"-"*57+"\n")
             for filename in sorted(backup_file.keys()):
                 f.write('%-75s\t%9s\t%32s\n' % (filename, backup_file[filename][0], backup_file[filename][1]))
 
@@ -189,8 +190,8 @@ def upload_file(ticket_id):
     # loop in loop create file structure on remote server, copy file and writing action_log
     action_log = []
     notes = open(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'notes.txt', 'a+')
-    notes.write("-"*53+"Uploaded files"+"-"*53+"\n")
-    notes.write('%-75s\t%9s\t%s\n%s\n' % ('Remote filename', 'Size(byte)', 'Timestamp', '-'*120))
+    notes.write("-"*57+"Uploaded files"+"-"*57+"\n")
+    notes.write('%-75s\t%9s\t%s\n%s\n' % ('Remote filename', 'Size(byte)', 'Timestamp', '-'*128))
     for i in tree:
         for k in i[1]:
             if k == 'SOURCES' or k == 'DB_OBJ': continue
@@ -230,8 +231,8 @@ def rollback(ticket_id):
             action_log.append(line.strip())
     action_log.reverse()
     notes = open(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'notes.txt', 'a+')
-    notes.write("-"*50+"Rollback all change"+"-"*50+"\n")
-    notes.write('%-75s\t%9s\t%s\n%s\n' % ('Remote filename', 'Action', 'Timestamp', '-'*120))
+    notes.write("-"*54+" Rollback all change"+"-"*54+"\n")
+    notes.write('%-75s\t%9s\t%s\n%s\n' % ('Remote filename', 'Action', 'Timestamp', '-'*128))
     for line in action_log:
         line = line.split(',')
         # generate path for smb
