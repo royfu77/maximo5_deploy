@@ -55,7 +55,6 @@ def check_ticket(ticket_id):
     main, s = set_samba_settings()
     # if directory with ticket number not exist return true
     if not os.path.exists(main["local_storage"]+delimiter()+str(ticket_id)):
-        # print "Ticket "+str(ticket_id)+" was not processed earlier"
         return True, main["local_storage"]+delimiter()+str(ticket_id)
     else:
         #
@@ -63,6 +62,8 @@ def check_ticket(ticket_id):
             print "[WARN]\tPath "+str(main["local_storage"])+delimiter()+str(ticket_id)+" not directory, please check it"
             return False, None
         else:
+            # print len(os.listdir(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()))
+            # print os.path.isfile(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()+"notes.txt")
             if len(os.listdir(main["local_storage"]+delimiter()+str(ticket_id)+delimiter())) < 3 or os.path.isfile(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()+"notes.txt") is False:
                 print "[WARN]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tPath "+str(main["local_storage"]) + \
                       delimiter()+str(ticket_id) + \
@@ -261,7 +262,6 @@ def rollback(ticket_id):
                 file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
                 file_path = delimiter()+delimiter()+str(samba['smb_server'])+delimiter()+"c$"+delimiter()+f_path+f
                 print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tFile restored from backup: "+str(file_path)
-
                 notes.write('%-75s\t%9s\t%s\n' % (file_path, 'Restored', datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
 
     conn.close()
