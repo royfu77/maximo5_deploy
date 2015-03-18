@@ -10,6 +10,3 @@ def enc(password):
     result = [chr(int(i, 16) ^ 0xb) for i in [hex(ord(i)) for i in password]]
     print ''.join(result)
     return 0
-
-
-enc(sys.argv[1])

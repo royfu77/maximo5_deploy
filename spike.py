@@ -8,7 +8,7 @@ import conf
 import sys
 import argparse
 from datetime import datetime
-
+from encrypt_password import enc
 
 
 def show_config():
@@ -27,6 +27,7 @@ def main():
                                        ' First id=bpms, second id=svn revision ')
     parser.add_argument('-d', '--deploy', type=int, help='upload new revision from ticket to production')
     parser.add_argument('-r', '--rollback', type=int, help='Restore from backup current ticket')
+    parser.add_argument('-e', '--encrypt', type=str, dest='password', help='Print encrypted password')
 
     args = vars(parser.parse_args())
     # print args
@@ -58,6 +59,9 @@ def main():
     if args['rollback'] and args['show_config'] is False and args['rev'] is None \
             and args['id'] is None and args['deploy'] is None:
         filemanage.rollback(args['rollback'])
+    if args['password'] and args['show_config'] is False and args['rev'] is None \
+            and args['id'] is None and args['deploy'] is None and args['rollback'] is None:
+        enc(args['password'])
 
     return 0
 
