@@ -196,16 +196,16 @@ def upload_file(ticket_id):
     for i in tree:
         for k in i[1]:
             if k == 'SOURCES' or k == 'DB_OBJ': continue
-            if k not in [x.filename for x in conn.listPath('c$', 'temp'+delimiter()+'maximo'+i[0])]:
+            if k not in [x.filename for x in conn.listPath('c$', 'maximo'+i[0])]:
                 # for testing using path temp/maximo for prod need remote temp
-                ch_path = 'temp'+delimiter()+'maximo'+i[0]+delimiter()+str(k)
+                ch_path = 'maximo'+i[0]+delimiter()+str(k)
                 conn.createDirectory('c$', ch_path)
                 print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tCreate directory "+\
                       delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+ch_path
                 action_log.append(('mkdir', delimiter()+delimiter()+samba['smb_server']+delimiter()+'c$'+delimiter()+ch_path))
         if len(i[2]) > 0 and 'DB_OBJ' != i[0][1:]:
             for f in i[2]:
-                f_path = 'temp'+delimiter()+'maximo'+i[0]+delimiter()
+                f_path = 'maximo'+i[0]+delimiter()
                 obj_file = str(path)+str(i[0])+delimiter()+str(f)
                 file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
                 notes.write('%-75s\t%9s\t%s\n' % (delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+f_path+f, str(file_size), datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
@@ -257,7 +257,7 @@ def rollback(ticket_id):
     for item in tree:
         if len(item[2]) > 0:
             for f in item[2]:
-                f_path = 'temp'+delimiter()+'maximo'+item[0]+delimiter()
+                f_path = 'maximo'+item[0]+delimiter()
                 obj_file = str(path)+str(item[0])+delimiter()+str(f)
                 file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
                 file_path = delimiter()+delimiter()+str(samba['smb_server'])+delimiter()+"c$"+delimiter()+f_path+f

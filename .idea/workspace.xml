@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5a54ec09-7ed4-4da7-a90e-37242ba61879" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/encrypt_password.py" afterPath="$PROJECT_DIR$/encrypt_password.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spike.py" afterPath="$PROJECT_DIR$/spike.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/filemanage.py" afterPath="$PROJECT_DIR$/filemanage.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="spike.iws" />
@@ -31,7 +30,7 @@
       <file leaf-file-name="conf.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/conf.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="986">
+            <state vertical-scroll-proportion="0.0" vertical-offset="340" max-vertical-offset="986">
               <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
               <folding>
                 <element signature="e#72#91#0" expanded="true" />
@@ -50,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="spike.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="spike.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spike.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4992272" vertical-offset="306" max-vertical-offset="1275">
-              <caret line="37" column="21" selection-start-line="37" selection-start-column="21" selection-end-line="37" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1275">
+              <caret line="44" column="70" selection-start-line="44" selection-start-column="70" selection-end-line="44" selection-end-column="70" />
               <folding>
                 <element signature="e#72#82#0" expanded="true" />
               </folding>
@@ -74,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="filemanage.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="filemanage.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/filemanage.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4726">
-              <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
+            <state vertical-scroll-proportion="0.44822258" vertical-offset="2957" max-vertical-offset="4726">
+              <caret line="191" column="19" selection-start-line="191" selection-start-column="19" selection-end-line="191" selection-end-column="19" />
               <folding>
                 <element signature="e#70#79#0" expanded="true" />
               </folding>
@@ -89,7 +88,7 @@
       <file leaf-file-name="encrypt_password.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/encrypt_password.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
+            <state vertical-scroll-proportion="0.0" vertical-offset="204" max-vertical-offset="306">
               <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
               <folding />
             </state>
@@ -125,9 +124,9 @@
         <option value="$PROJECT_DIR$/conf.py" />
         <option value="$PROJECT_DIR$/config.ini" />
         <option value="$PROJECT_DIR$/svn.py" />
-        <option value="$PROJECT_DIR$/filemanage.py" />
         <option value="$PROJECT_DIR$/spike.py" />
         <option value="$PROJECT_DIR$/encrypt_password.py" />
+        <option value="$PROJECT_DIR$/filemanage.py" />
       </list>
     </option>
   </component>
@@ -159,6 +158,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -179,7 +179,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -505,7 +504,13 @@
       <option name="project" value="LOCAL" />
       <updated>1426083194666</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Finish interface + fix small bugs.  Alpha release 0.2">
+      <created>1426690838971</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1426690838971</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -598,7 +603,8 @@
     <MESSAGE value="add function show_config. &#10;Add help &#10;" />
     <MESSAGE value="create interface(without 2 option -d and -r)" />
     <MESSAGE value="Finish interface + fix small bugs.  Alpha release 0.1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Finish interface + fix small bugs.  Alpha release 0.1" />
+    <MESSAGE value="Finish interface + fix small bugs.  Alpha release 0.2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finish interface + fix small bugs.  Alpha release 0.2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1047,16 +1053,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/filemanage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="4726">
-          <caret line="33" column="34" selection-start-line="33" selection-start-column="34" selection-end-line="33" selection-end-column="34" />
-          <folding>
-            <element signature="e#70#79#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/encrypt_password.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="306">
@@ -1067,10 +1063,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/spike.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4992272" vertical-offset="306" max-vertical-offset="1275">
-          <caret line="37" column="21" selection-start-line="37" selection-start-column="21" selection-end-line="37" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1275">
+          <caret line="44" column="70" selection-start-line="44" selection-start-column="70" selection-end-line="44" selection-end-column="70" />
           <folding>
             <element signature="e#72#82#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/filemanage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44822258" vertical-offset="2957" max-vertical-offset="4726">
+          <caret line="191" column="19" selection-start-line="191" selection-start-column="19" selection-end-line="191" selection-end-column="19" />
+          <folding>
+            <element signature="e#70#79#0" expanded="true" />
           </folding>
         </state>
       </provider>
