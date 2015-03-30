@@ -14,7 +14,7 @@ def check_config():
 
 
 def denc(password):
-    result = [chr(i) for i in [int(hex(ord(i)), 16) ^ 0xb for i in password]]
+    result = [chr(i) for i in [int((int(hex(ord(i)), 16) + 0x4) ^ 0xb) for i in password]]
     return ''.join(result)
 
 
