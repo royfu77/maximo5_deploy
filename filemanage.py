@@ -105,7 +105,7 @@ def get_production_backup(path, list_filename):
 # new function for backup, worked via pysmb
 def get_production_backup2(path, list_filename):
     main, samba = set_samba_settings()
-    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], 'maximopreprod', use_ntlm_v2 = True)
+    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'].lower(), getBIOSName(samba['smb_server']), use_ntlm_v2 = True)
     conn.connect(samba['smb_server'], 139)
     prod_files = filter(lambda x: x[7:17] == 'MAXIMOTEST' and x[18:25] != 'SOURCES' and x[18:24] != 'DB_OBJ', list_filename)
     file_info = {}
@@ -186,7 +186,7 @@ def upload_file(ticket_id):
         if item[0].replace(path, '')[1:8] == 'SOURCES':
             continue
         tree.append(item)
-    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], 'maximopreprod', use_ntlm_v2 = True)
+    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'].lower(), getBIOSName(samba['smb_server']), use_ntlm_v2 = True)
     conn.connect(samba['smb_server'], 139)
     # for test using c:\temp\maximo
     # loop in loop create file structure on remote server, copy file and writing action_log
@@ -225,7 +225,7 @@ def upload_file(ticket_id):
 # remove new files and restore from backup
 def rollback(ticket_id):
     main, samba = set_samba_settings()
-    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], getBIOSName(samba['smb_server']), use_ntlm_v2 = True)
+    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'].lower(), getBIOSName(samba['smb_server']), use_ntlm_v2 = True)
     conn.connect(samba['smb_server'], 139)
     action_log = []
     with open((main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'action.log'), 'r') as log:
