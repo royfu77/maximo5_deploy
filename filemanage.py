@@ -9,6 +9,7 @@ from datetime import datetime
 from hashlib import md5
 import svn
 from smb.SMBConnection import SMBConnection
+from nmb.NetBIOS import NetBIOS
 
 
 def delimiter():
@@ -224,7 +225,7 @@ def upload_file(ticket_id):
 # remove new files and restore from backup
 def rollback(ticket_id):
     main, samba = set_samba_settings()
-    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], 'maximopreprod', use_ntlm_v2 = True)
+    conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], getBIOSName(samba['smb_server']), use_ntlm_v2 = True)
     conn.connect(samba['smb_server'], 139)
     action_log = []
     with open((main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'action.log'), 'r') as log:
@@ -268,6 +269,12 @@ def rollback(ticket_id):
     return 0
 
 
-# prepare_file_for_deployment(1615344, 5393)
-# upload_file(1604065)
-# rollback(1604065)
+def getBIOSName(remote_smb_ip, timeout=30):
+    try:
+        bios = NetBIOS()
+        srv_name = bios.queryIPForName(remote_smb_ip, timeout=timeout)
+    except:
+        print >> sys.stderr, "Looking up timeout, check remote_smb_ip again!!"
+    finally:
+        bios.close()
+        return srv_name
