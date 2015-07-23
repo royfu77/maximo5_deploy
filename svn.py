@@ -61,6 +61,11 @@ def svn_export_files(svn_id, path):
                              discover_changed_paths=True, limit=0)[0].get("changed_paths"))
     raw_files = []
     for file in range(0, qty_file):
+        status = client.log(url, revision_start=pysvn.Revision(pysvn.opt_revision_kind.number, svn_id),
+                             revision_end=pysvn.Revision(pysvn.opt_revision_kind.number, svn_id),
+                             discover_changed_paths=True, limit=0)[0].get("changed_paths")[file]['action']
+        if status == 'D':       # if object marked deleted, skip it
+            continue
         raw_files.append(client.log(url, revision_start=pysvn.Revision(pysvn.opt_revision_kind.number, svn_id),
                              revision_end=pysvn.Revision(pysvn.opt_revision_kind.number, svn_id),
                              discover_changed_paths=True, limit=0)[0].get("changed_paths")[file]['path'])

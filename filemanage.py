@@ -209,7 +209,7 @@ def upload_file(ticket_id):
                 f_path = 'maximo'+i[0]+delimiter()
                 obj_file = str(path)+str(i[0])+delimiter()+str(f)
                 file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
-                notes.write('%-75s\t%9s\t%s\n' % (delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+f_path+f, str(file_size), datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
+                notes.write('%-75s\t%9s\t%s\n' % (delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+f_path+f, str(file_size), datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
                 print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tUploaded size in byte:"+str(file_size)+\
                       ", file: "+delimiter()+delimiter()+samba['smb_server']+delimiter()+"c$"+delimiter()+f_path+f
                 action_log.append(('cp', delimiter()+delimiter()+samba['smb_server']+delimiter()+'c$'+delimiter()+f_path+f))
@@ -245,7 +245,7 @@ def rollback(ticket_id):
         if line[0] == 'mkdir':
             conn.deleteDirectory('c$', path)
             print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tDirectory deleted: "+line[1]
-        notes.write('%-75s\t%9s\t%s\n' % (line[1], 'Deleted', datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
+        notes.write('%-75s\t%9s\t%s\n' % (line[1], 'Deleted', datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
     os.remove(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'action.log')
     path = main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'backup'\
            + delimiter()+'trunk'+delimiter() + 'maximotest'
@@ -263,7 +263,7 @@ def rollback(ticket_id):
                 file_size = conn.storeFile('c$', f_path+f, open(obj_file, 'rb'))
                 file_path = delimiter()+delimiter()+str(samba['smb_server'])+delimiter()+"c$"+delimiter()+f_path+f
                 print "[INFO]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tFile restored from backup: "+str(file_path)
-                notes.write('%-75s\t%9s\t%s\n' % (file_path, 'Restored', datetime.now().strftime('%Y-%d-%m %H:%M:%S')))
+                notes.write('%-75s\t%9s\t%s\n' % (file_path, 'Restored', datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
 
     conn.close()
     return 0
