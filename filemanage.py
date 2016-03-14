@@ -31,6 +31,7 @@ def set_samba_settings():
     main, s, samba = conf.load_config()
     return main, samba
 
+
 # this function copy-paste from source code pysmb/base/util/__init__
 def convert_file_time_to_epoch(t):
     return (t - 116444736000000000L) / 10000000.0
@@ -58,13 +59,10 @@ def check_ticket(ticket_id):
     if not os.path.exists(main["local_storage"]+delimiter()+str(ticket_id)):
         return True, main["local_storage"]+delimiter()+str(ticket_id)
     else:
-        #
         if not os.path.isdir(main["local_storage"]+delimiter()+str(ticket_id)):
             print "[WARN]\tPath "+str(main["local_storage"])+delimiter()+str(ticket_id)+" not directory, please check it"
             return False, None
         else:
-            # print len(os.listdir(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()))
-            # print os.path.isfile(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()+"notes.txt")
             if len(os.listdir(main["local_storage"]+delimiter()+str(ticket_id)+delimiter())) < 3 or os.path.isfile(main["local_storage"]+delimiter()+str(ticket_id)+delimiter()+"notes.txt") is False:
                 print "[WARN]\t"+datetime.now().strftime('%H:%M:%S %d-%m-%y')+"\tPath "+str(main["local_storage"]) + \
                       delimiter()+str(ticket_id) + \
@@ -137,8 +135,6 @@ def get_production_backup2(path, list_filename):
                 file_attributes, filesize = conn.retrieveFile('c$',
                                                                   delimiter()+'maximo'+delimiter()+f[18:].replace('/', '\\'),
                                                                   local_file)
-            # file_time = conn.getAttributes('c$', 'maximo/'+f[18:])
-            # os.utime(path+delimiter()+f.replace('/', '\\'), (os.stat(path+delimiter()+f.replace('/', '\\')).st_ctime, convert_file_time_to_epoch(file_time.last_write_time)))
             file_info[f] = []
             file_info[f].append(filesize)
             file_info[f].append(md5(open(path+delimiter()+f.replace('/', '\\'), 'rb').read()).hexdigest())
@@ -188,8 +184,6 @@ def upload_file(ticket_id):
         tree.append(item)
     conn = SMBConnection(samba['smb_username'], samba['smb_password'], os.environ['COMPUTERNAME'], getBIOSName(samba['smb_server']), use_ntlm_v2 = True)
     conn.connect(samba['smb_server'], 139)
-    # for test using c:\temp\maximo
-    # loop in loop create file structure on remote server, copy file and writing action_log
     action_log = []
     notes = open(main['local_storage']+delimiter()+str(ticket_id)+delimiter()+'notes.txt', 'a+')
     notes.write("-"*57+"Uploaded files"+"-"*57+"\n")
@@ -278,3 +272,4 @@ def getBIOSName(remote_smb_ip, timeout=30):
     finally:
         bios.close()
         return srv_name[0]
+
